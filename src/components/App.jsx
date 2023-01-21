@@ -40,7 +40,6 @@ class App extends Component {
 
   }
 
-
   render() {
     const { name, filter } = this.state;
 
@@ -48,10 +47,7 @@ class App extends Component {
     return (
     <div>
         <h1>Phonebook</h1>
-
-  
             <Form onSubmit={this.addContact} />
-    
     <h2>Contacts</h2>
     <FieldToFilter value={filter} onChange={ this.changeFilter} />   
     <ContactsList contacts={visibleContacts}/>

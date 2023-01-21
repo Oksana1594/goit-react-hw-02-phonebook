@@ -6,7 +6,7 @@ class Form extends Component {
     number: ''
     }
 
-    // nameInputId.id = nanoid();
+    
 
     handleNameChange = event => {
     this.setState({ name: event.currentTarget.value });
