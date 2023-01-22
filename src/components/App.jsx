@@ -1,8 +1,11 @@
 import { Component } from "react";
 import shortid from "shortid";
 import Form from './Form/Form';
-import ContactsList from './Contacts/ContactsList/ContactsList';
+import ContactList from './Contacts/ContactsList/ContactsList';
 import FieldToFilter from "./FieldToFilter/FieldToFilter";
+import Title from "./Shared/Title";
+import MainTitle from "./Shared/MaineTitle";
+import Container from "./Shared/Container";
 
 class App extends Component {
   state = {
@@ -16,16 +19,39 @@ class App extends Component {
   }
 
   addContact = (name, number) => {
+    const { contacts } = this.state;
     const newContact = {
       id: shortid.generate(),
       name,
       number
     };
 
+      const isNameAdded = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    const isNumberAdded = contacts.some(contact => contact.number === number);
+
+    if (isNameAdded) {
+      alert(`${name} is alredy in contacts`);
+      return false;
+    } else if (isNumberAdded) {
+      alert(`${number} is alredy in contacts`);
+      return false;
+    }
+
     this.setState(({contacts}) => ({
       contacts: [newContact, ...contacts]
     }))
+
+     return true;
   }
+
+    deleteContact = contactID => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactID),
+    }));
+  };
 
   
   changeFilter = event => {
@@ -41,17 +67,22 @@ class App extends Component {
   }
 
   render() {
-    const { name, filter } = this.state;
+    const { filter, contacts } = this.state;
 
     const visibleContacts = this.getVisibleContacts()
     return (
-    <div>
-        <h1>Phonebook</h1>
-            <Form onSubmit={this.addContact} />
-    <h2>Contacts</h2>
-    <FieldToFilter value={filter} onChange={ this.changeFilter} />   
-    <ContactsList contacts={visibleContacts}/>
-</div>
+      <Container>
+
+        <MainTitle mainTitle="Phonebook "/>
+        <Form onSubmit={this.addContact} />
+        <Title title="Contacts"/>
+        <FieldToFilter value={filter} onChange={ this.changeFilter} />   
+        {contacts.length > 0 ? (
+        <ContactList contacts={visibleContacts} onDeleteContact={this.deleteContact} />) : (
+        <p>Your phonebook is empty. Please add contact.</p>)}
+
+    </Container>
+     
   );
   }
 }
